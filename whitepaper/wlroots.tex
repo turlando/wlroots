@@ -22,31 +22,10 @@ compositor designs.
 \newpage
 \section{Background}\label{background}
 
-A wlroots compositor has three primary responsibilities.
-
-\begin{enumerate}
-	\item Manage input and output hardware and make them available to desktop
-		applications through the Wayland protocol.
-	\item Manage windows from desktop applications including window screen
-		coordinates, size, state changes (such as maximization and fullscreen),
-		and decorations through the Wayland shell protocols.
-    \item Render the contents of the screen.
-\end{enumerate}
-
-In general terms, to \emph{composite} means to take many seprate images and
-combine them into one image. The screen you are looking at right now is
-presented to you as a single image, but the source of these images may come from
-many different applications or processes. The data for these images (called
-\emph{buffers}) is continuously sent to the compositor through the Wayland
-protocol as the window updates its contents, and the compositor \emph{paints}
-these contents on the screen in the right location.
-
-A Wayland compositor is similar to an X11 window manager. Through the years,
-many novel advancements in desktop UI design have come from these projects. For
-instance, i3wm offers a flexible tree-based tiling model of window placement,
-and projects like Awesome and xmonad have powerful embedded plugin systems.
-wlroots is designed to accomidate projects like these (on any device) as the
-Linux Desktop moves toward Wayland.
+Wayland is a protocol used to communicate between user applications and a
+\emph{compositor}. The compositor has ownership over input and output
+resources -- typically displays connected over DVI, HDMI, etc, and keyboards,
+mice, etc.
 
 wlroots (stylized in lowercase, or as "wlr") is a subproject of the Sway
 compositor. Originally, Sway was written on top of a similar library called wlc.
