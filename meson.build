@@ -30,8 +30,6 @@ add_project_link_arguments(
 	language: 'c',
 )
 
-conf_data = configuration_data()
-
 wlr_inc = include_directories('include')
 
 cc = meson.get_compiler('c')
@@ -68,17 +66,17 @@ wlr_parts = []
 wlr_deps = []
 
 if libcap.found() and get_option('enable-libcap') != 'false'
-	conf_data.set('WLR_HAS_LIBCAP', true)
 	wlr_deps += libcap
+	add_project_arguments('-DWLR_HAS_LIBCAP', language: 'c')
 endif
 
 if systemd.found() and get_option('enable-systemd') != 'false'
-	conf_data.set('WLR_HAS_SYSTEMD', true)
 	wlr_deps += systemd
+	add_project_arguments('-DWLR_HAS_SYSTEMD', language: 'c')
 endif
 
 if elogind.found() and get_option('enable-elogind') != 'false'
-	conf_data.set('WLR_HAS_ELOGIND', true)
+	add_project_arguments('-DWLR_HAS_ELOGIND', language: 'c')
 endif
 
 if get_option('enable-x11_backend') or get_option('enable-xwayland')
@@ -94,15 +92,15 @@ if get_option('enable-x11_backend') or get_option('enable-xwayland')
 	xcb_errors     = dependency('xcb-errors', required: get_option('enable-xcb_errors') == 'true')
 
 	if xcb_icccm.found()
-		conf_data.set('WLR_HAS_XCB_ICCCM', true)
+		add_project_arguments('-DWLR_HAS_XCB_ICCCM', language: 'c')
 	endif
 
 	if xcb_xkb.found()
-		conf_data.set('WLR_HAS_XCB_XKB', true)
+		add_project_arguments('-DWLR_HAS_XCB_XKB', language: 'c')
 	endif
 
 	if xcb_errors.found() and get_option('enable-xcb_errors') != 'false'
-		conf_data.set('WLR_HAS_XCB_ERRORS', true)
+		add_project_arguments('-DWLR_HAS_XCB_ERRORS', language: 'c')
 	endif
 
 	wlr_deps += [
@@ -115,13 +113,13 @@ else
 endif
 
 if get_option('enable-x11_backend')
-	conf_data.set('WLR_HAS_X11_BACKEND', true)
+	add_project_arguments('-DWLR_HAS_X11_BACKEND', language: 'c')
 endif
 
 if get_option('enable-xwayland')
 	subdir('xwayland')
 	wlr_parts += [lib_wlr_xwayland]
-	conf_data.set('WLR_HAS_XWAYLAND', true)
+	add_project_arguments('-DWLR_HAS_XWAYLAND', language: 'c')
 else
 	exclude_headers += 'xwayland.h'
 endif
@@ -188,13 +186,13 @@ summary = [
 	'----------------',
 	'wlroots @0@'.format(meson.project_version()),
 	'',
-	'      libcap: @0@'.format(conf_data.get('WLR_HAS_LIBCAP', false)),
-	'     systemd: @0@'.format(conf_data.get('WLR_HAS_SYSTEMD', false)),
-	'     elogind: @0@'.format(conf_data.get('WLR_HAS_ELOGIND', false)),
-	'    xwayland: @0@'.format(conf_data.get('WLR_HAS_XWAYLAND', false)),
-	' x11_backend: @0@'.format(conf_data.get('WLR_HAS_X11_BACKEND', false)),
-	'   xcb-icccm: @0@'.format(conf_data.get('WLR_HAS_XCB_ICCCM', false)),
-	'  xcb-errors: @0@'.format(conf_data.get('WLR_HAS_XCB_ERRORS', false)),
+	'      libcap: @0@'.format(get_option('enable-libcap')),
+	'     systemd: @0@'.format(get_option('enable-systemd')),
+	'     elogind: @0@'.format(get_option('enable-elogind')),
+	'    xwayland: @0@'.format(get_option('enable-xwayland')),
+	' x11_backend: @0@'.format(get_option('enable-x11_backend')),
+	'   xcb-icccm: @0@'.format(get_option('')), # ???
+	'  xcb-errors: @0@'.format(get_option('enable-xcb_errors', false)),
 	'----------------',
 	''
 ]
